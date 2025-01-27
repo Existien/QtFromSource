@@ -11,3 +11,6 @@ Available build args:
 - `EMSCRIPTEN_VERSION` emscripten version. Make sure it's compatible with the selected Qt version. (see https://doc.qt.io/qt-6/wasm.html)
 - `QT_DOC_VERSION` sets the version of examples and documentation installed with the QtCreator.
 
+## TODO
+
+- configure WASM corectly in QtCreator
