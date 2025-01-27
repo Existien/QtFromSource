@@ -2,7 +2,7 @@ ARG QT_VERSION=6.8.1
 ARG QT_DOC_VERSION=6.8.0
 ARG EMSCRIPTEN_VERSION=3.1.56
 
-FROM debian:bullseye-slim AS builder
+FROM ubuntu:24.04 AS builder
 ARG DEBIAN_FRONTEND=noninteractive
 ARG QT_VERSION
 ARG EMSCRIPTEN_VERSION
@@ -12,7 +12,7 @@ WORKDIR /
 RUN \
     apt-get update && \
     apt-get full-upgrade -y && \
-    apt-get install -y \
+    apt-get install --no-install-recommends -y \
     apt-utils \
     build-essential \
     chromium \
@@ -23,8 +23,9 @@ RUN \
     libdbus-1-dev \
     libfontconfig1-dev \
     libfreetype6-dev \
-    libgles2-mesa \
-    libgles2-mesa-dev \
+    libglib2.0-dev \
+    libgles2 \
+    libgles-dev \
     libglib2.0-dev \
     libx11-dev \
     libx11-xcb-dev \
@@ -69,8 +70,7 @@ RUN \
     && \
     rm -rf /var/lib/apt/lists/*
 
-RUN python3 -m pip install -U pip && \
-    python3 -m pip install cmake
+RUN python3 -m pip install --break-system-packages cmake
 
 RUN git clone https://github.com/emscripten-core/emsdk.git && \
     cd emsdk && \
@@ -102,7 +102,7 @@ RUN cd /build/qt-wasm && \
     cmake --build . --parallel && cmake --install . && chmod a+x /Qt/$QT_VERSION/wasm/bin/* && \
     cd / && rm -rf /build/qt-wasm
 
-FROM debian:bullseye-slim
+FROM ubuntu:24.04
 ARG DEBIAN_FRONTEND=noninteractive
 ARG QT_VERSION
 ARG QT_DOC_VERSION
@@ -113,7 +113,7 @@ WORKDIR /
 RUN \
     apt-get update && \
     apt-get full-upgrade -y && \
-    apt-get install -y \
+    apt-get install --no-install-recommends -y \
     apt-utils \
     build-essential \
     chromium \
@@ -124,8 +124,9 @@ RUN \
     libdbus-1-dev \
     libfontconfig1-dev \
     libfreetype6-dev \
-    libgles2-mesa \
-    libgles2-mesa-dev \
+    libglib2.0-dev \
+    libgles2 \
+    libgles-dev \
     libglib2.0-dev \
     libx11-dev \
     libx11-xcb-dev \
@@ -167,14 +168,13 @@ RUN \
     xterm \
     xvfb \
     zip \
+    mesa-utils \
     && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /Qt /Qt
 
-RUN python3 -m pip install -U pip && \
-python3 -m pip install cmake && \
-python3 -m pip install aqtinstall
+RUN python3 -m pip install --break-system-packages cmake aqtinstall
 
 RUN git clone https://github.com/emscripten-core/emsdk.git && \
     cd emsdk && \
