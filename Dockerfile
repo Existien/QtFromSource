@@ -120,6 +120,7 @@ RUN \
     curl \
     git \
     less \
+    libasound2t64 \
     libc6 \
     libdbus-1-dev \
     libfontconfig1-dev \
@@ -182,7 +183,7 @@ RUN git clone https://github.com/emscripten-core/emsdk.git && \
     ./emsdk activate $EMSCRIPTEN_VERSION
 
 RUN npm install -g n && \
-    n 16 && \
+    n 20 && \
     n prune
 
 WORKDIR /Qt
